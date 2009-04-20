@@ -1,0 +1,16 @@
+a {text-decoration:none; color:black}
+h1 {display:none}
+body {margin:0}
+
+.footer {display:none}
+.smallyear {display:none}
+.other {display:none}
+.today {font-weight: normal}
+.year {display: none}
+.month {width: 840px; font-size: 24px; margin-bottom: 50px}
+.pb {page-break-before: always}
+.printable {display: inline}
+
+#header {display:none}
+#languages {display:none}
+#logo {display:none}

@@ -1,0 +1,9 @@
+<FilesMatch "\.(png|css|js)$">
+Header set Expires "Thu, 15 Apr 2011 20:00:00 GMT"
+</FilesMatch>
+# Redirect requests to index.php
+RewriteEngine on
+# Do not redirect if the filename exists
+RewriteCond %{REQUEST_fileNAME} !-f
+RewriteRule .* index.php
+Allow From All
