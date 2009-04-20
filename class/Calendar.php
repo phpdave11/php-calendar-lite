@@ -11,6 +11,9 @@ class Calendar
     private $ajax = false;
     private $useAjax = true;
     private $useTidy = false;
+    private $locale = 'en_US.UTF-8';
+    private $encoding = 'UTF-8';
+    private $local_encoding = 'UTF-8';
 
     public function useAjax($bool)
     {
@@ -22,18 +25,35 @@ class Calendar
         $this->useTidy = $bool;
     }
 
-    private function translateLanguageCode($code)
+    private function setLanguage($lang)
     {
-        static $codes = array(
-            'en' => 'en_US.UTF-8',
-            'es' => 'es_ES.UTF-8',
-            'de' => 'de_DE.UTF-8',
-            'ru' => 'ru_RU.UTF-8',
-            'ja' => 'ja_JP.UTF-8',
-            'zh' => 'zh_CN.UTF-8',
-            'ko' => 'ko_KR.UTF-8'
+        $locales = array(
+            'en' => array('en_US.UTF-8' => 'UTF-8', 'english' => 'ISO-8859-1'),
+            'es' => array('es_ES.UTF-8' => 'UTF-8', 'spanish' => 'ISO-8859-1'),
+            'de' => array('de_DE.UTF-8' => 'UTF-8', 'german' => 'ISO-8859-1'),
+            'ru' => array('ru_RU.UTF-8' => 'UTF-8', 'russian' => 'WINDOWS-1251'),
+            'ja' => array('ja_JP.UTF-8' => 'UTF-8', 'japanese' => 'Shift_JIS'),
+            'zh' => array('zh_CN.UTF-8' => 'UTF-8', 'chinese' => 'Big5'),
+            'ko' => array('ko_KR.UTF-8' => 'UTF-8', 'korean' => 'EUC-KR')
         );
-        return isset($codes[$code]) ? $codes[$code] : $codes['en'];
+
+        foreach ($locales[$lang] as $locale => $encoding)
+        {
+            if (setlocale(LC_ALL, $locale))
+            {
+                $this->locale = $locale;
+                $this->locale_encoding = $encoding;
+                break;
+            }
+        }
+    }
+
+    private function strftime($format, $ts)
+    {
+        $retval = strftime($format, $ts);
+        if ($this->encoding != $this->locale_encoding)
+            $retval = iconv($this->locale_encoding, $this->encoding, $retval);
+        return $retval;
     }
 
     private function translateNiceUrlToParams()
@@ -81,7 +101,7 @@ class Calendar
         if ($language === null)
             $language = isset($_GET['language']) ? $_GET['language'] : 'en';
 
-        setlocale(LC_TIME, $this->translateLanguageCode($language));
+        $this->setLanguage($language);
 
         // Year 2038 Bug
         if ($year >= 2038)
@@ -279,17 +299,17 @@ class Calendar
 
         $today = date('Y-m-d');
 
-        $monthName = strftime('%B', $ts);
+        $monthName = $this->strftime('%B', $ts);
         $monthNumber = idate('n', $ts);
 
         $lastMonthTs = mktime($hour, $minute, $second, $month - 1, $day, $year);
         $nextMonthTs = mktime($hour, $minute, $second, $month + 1, $day, $year);
 
-        $lastMonthName = strftime('%B', $lastMonthTs);
+        $lastMonthName = $this->strftime('%B', $lastMonthTs);
         $lastMonthNumber = idate('n', $lastMonthTs);
         $lastYear = idate('Y', $lastMonthTs);
 
-        $nextMonthName = strftime('%B', $nextMonthTs);
+        $nextMonthName = $this->strftime('%B', $nextMonthTs);
         $nextMonthNumber = idate('n', $nextMonthTs);
         $nextYear = idate('Y', $nextMonthTs);
 
@@ -335,7 +355,7 @@ class Calendar
         $weekTs = mktime($hour, $minute, $second, $month, $weekDays, $year);
         for ($i = 0; $i < 7; $i++)
         {
-            echo '<th>' . strftime('%A', $weekTs) . '</th>';
+            echo '<th>' . $this->strftime('%A', $weekTs) . '</th>';
             $weekTs = mktime($hour, $minute, $second, $month, ++$weekDays, $year);
         }
         echo '</tr></thead><tbody>';
