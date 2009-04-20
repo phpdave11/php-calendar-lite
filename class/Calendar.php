@@ -39,6 +39,8 @@ class Calendar
     private function translateNiceUrlToParams()
     {
         $directoryName = dirname($_SERVER['SCRIPT_NAME']);
+        if ($directoryName == DIRECTORY_SEPARATOR)
+            $directoryName = '';
         $this->directoryName = $directoryName;
         $requestURI = $_SERVER['REQUEST_URI'];
         if (strlen($requestURI) > strlen($directoryName) && substr($requestURI, 0, strlen($directoryName)) == $directoryName)
