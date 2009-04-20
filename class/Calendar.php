@@ -237,7 +237,7 @@ class Calendar
         else
             $this->printMonth($month);
 
-        echo '<h1 class="footer"><a href="' . $this->directoryName . '/calendar.tar.gz">source code</a></h1>';
+        echo '<h1 class="footer"><a href="http://code.google.com/p/php-calendar-light/downloads/list">source code</a></h1>';
 
         if (! $this->ajax)
         {
