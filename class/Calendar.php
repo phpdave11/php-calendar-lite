@@ -37,6 +37,10 @@ class Calendar
             'ko' => array('ko_KR.UTF-8' => 'UTF-8', 'korean' => 'EUC-KR')
         );
 
+        // Vista uses a different default encoding than Windows XP for Chinese
+        if (php_uname('s') == 'Windows NT' && php_uname('r') >= 6)
+            $locales['zh']['chinese'] = 'GB2312';
+
         foreach ($locales[$lang] as $locale => $encoding)
         {
             if (setlocale(LC_ALL, $locale))
