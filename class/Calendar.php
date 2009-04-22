@@ -153,7 +153,9 @@ class Calendar
             new MemorialDay,
             new LaborDay,
             new WashingtonsBirthday,
-            new IndependenceDay
+            new IndependenceDay,
+            new MothersDay,
+            new FathersDay
         );
 
         foreach ($this->holidays as $holiday)

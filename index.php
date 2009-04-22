@@ -6,7 +6,7 @@ function __autoload($class)
 }
 
 $cal = new Calendar;
-$cal->useAjax(true);
+$cal->useAjax(false);
 $cal->useTidy(false);
 $cal->display();
 
