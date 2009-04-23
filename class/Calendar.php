@@ -139,6 +139,7 @@ class Calendar
             new MaundyThursday($this->moonPhases),
             new GoodFriday($this->moonPhases),
             new Easter($this->moonPhases),
+            new AshWednesday($this->moonPhases),
             new DaylightSavingTimeStart,
             new DaylightSavingTimeEnd,
             new AprilFoolsDay,

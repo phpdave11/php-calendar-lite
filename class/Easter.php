@@ -2,7 +2,7 @@
 
 class Easter implements Holiday
 {
-    private $moonPhases;
+    protected $moonPhases;
 
     public function __construct($moonPhases)
     {
@@ -19,7 +19,7 @@ class Easter implements Holiday
         return $this->getEaster($year);
     }
 
-    private function getEaster($year)
+    protected function getEaster($year)
     {
         $calc = AstronomicalCalculation::getInstance();
         $date = $calc->calcEquiSol(AstronomicalCalculation::SPRING, $year);
