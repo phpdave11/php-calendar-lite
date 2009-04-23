@@ -1,12 +1,12 @@
 a {color:blue}
 img {border: 0}
 body {font-family: Helvetica,Arial; font-size: 12pt}
-table {border: 1px solid #bbb; padding: 0; margin-bottom: 20px}
+table {border: 1px solid #bbb; padding: 0; margin-bottom: 20px; border-collapse: collapse}
 div {text-align: left; font-family: Helvetica,Arial; font-size: 12pt}
 span {font-size:1em;font-family:Arial}
 h1 {width: 840px; text-align: center}
 h3 {width: 840px; text-align: center}
-td {width: 120px; height: 80px; vertical-align: top; border: 1px solid gray}
+td {width: 120px; height: 80px; vertical-align: top; border: 1px solid gray; padding: 3px}
 th {width: 120px; border: 1px solid gray; text-align: center}
 
 .holiday {font-size:12px; font-family: Arial}
