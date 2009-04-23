@@ -156,7 +156,8 @@ class Calendar
             new WashingtonsBirthday,
             new IndependenceDay,
             new MothersDay,
-            new FathersDay
+            new FathersDay,
+            new EarthDay
         );
 
         foreach ($this->holidays as $holiday)
