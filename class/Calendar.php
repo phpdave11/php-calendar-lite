@@ -150,7 +150,10 @@ class Calendar
             $sql = 'INSERT INTO holiday (' . implode(', ', $headers) . ') VALUES(' . str_repeat('?, ', count($headers) - 1) . '?)';
             $stmt = $db->prepare($sql);
             while (($data = fgetcsv($handle)) !== false)
-                $stmt->execute($data);
+            {
+                $values = array_pad($data, count($headers), null);
+                $stmt->execute($values);
+            }
             fclose($handle);
         }
 
