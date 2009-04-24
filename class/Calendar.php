@@ -92,15 +92,9 @@ class Calendar
         if ($month === null)
         {
             if (!isset($_GET['year']) && !isset($_GET['month']))
-            {
-                //$_GET['month'] = idate('n');
-                //$month = $_GET['month'];
                 $month = idate('n');
-            }
             elseif (isset($_GET['month']))
-            {
                 $month = $_GET['month'];
-            }
         }
         if ($language === null)
             $language = isset($_GET['language']) ? $_GET['language'] : 'en';
@@ -128,40 +122,47 @@ class Calendar
     private function setupHolidays()
     {
         $this->dates = array();
-        $this->holidays = array(
-            new Spring,
-            new Summer,
-            new Autumn,
-            new Winter,
-            new PiDay,
-            new TalkLikeAPirateDay,
-            new PalmSunday($this->moonPhases),
-            new MaundyThursday($this->moonPhases),
-            new GoodFriday($this->moonPhases),
-            new Easter($this->moonPhases),
-            new AshWednesday($this->moonPhases),
-            new DaylightSavingTimeStart,
-            new DaylightSavingTimeEnd,
-            new AprilFoolsDay,
-            new Christmas,
-            new ChristmasEve,
-            new NewYearsDay,
-            new NewYearsEve,
-            new ValentinesDay,
-            new Halloween,
-            new Thanksgiving,
-            new MartinLutherKingJrDay,
-            new MemorialDay,
-            new LaborDay,
-            new WashingtonsBirthday,
-            new IndependenceDay,
-            new MothersDay,
-            new FathersDay,
-            new EarthDay
-        );
+
+        $db = new PDO('sqlite:data/holidays.db');
+        $db->exec("CREATE TABLE IF NOT EXISTS holiday (
+                       id INTEGER PRIMARY KEY,
+                       name TEXT,
+                       after_solstice_or_equinox TEXT,
+                       after_moon_phase TEXT,
+                       day_of_week TEXT,
+                       week_order TEXT,
+                       week INTEGER,
+                       month INTEGER,
+                       day INTEGER,
+                       day_offset INTEGER,
+                       until_dst_value INTEGER
+                   )
+        ");
+        $count = 0;
+        $stmt = $db->prepare("select count(id) from holiday");
+        if ($stmt && $stmt->execute())
+            if ($row = $stmt->fetch(PDO::FETCH_NUM))
+                $count = $row[0];
+        if ($count == 0)
+        {
+            $handle = fopen('data/holidays.csv', 'r');
+            $headers = fgetcsv($handle);
+            $sql = 'INSERT INTO holiday (' . implode(', ', $headers) . ') VALUES(' . str_repeat('?, ', count($headers) - 1) . '?)';
+            $stmt = $db->prepare($sql);
+            while (($data = fgetcsv($handle)) !== false)
+                $stmt->execute($data);
+            fclose($handle);
+        }
+
+        $stmt = $db->prepare('select * from holiday');
+        if ($stmt && $stmt->execute())
+        {
+            $stmt->setFetchMode(PDO::FETCH_CLASS, 'Holiday');
+            $this->holidays = $stmt->fetchAll();
+        }
 
         foreach ($this->holidays as $holiday)
-            $this->dates[$holiday->getDate($this->year)] = $holiday->getName();
+            $this->dates[$holiday->getDate($this->year, $this->moonPhases)] = $holiday->name;
     }
 
     private function makeLink($overrides, $text, $useAjax=true)

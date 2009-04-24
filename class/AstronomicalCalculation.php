@@ -6,6 +6,10 @@ class AstronomicalCalculation
     const SUMMER = 2;
     const AUTUMN = 3;
     const WINTER = 4;
+    const VERNAL_EQUINOX = 1;
+    const SUMMER_SOLSTICE = 2;
+    const AUTUMNAL_EQUINOX = 3;
+    const WINTER_SOLSTICE = 4;
 
     public $year;
 
