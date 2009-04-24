@@ -1,5 +1,5 @@
 id,name,after_solstice_or_equinox,after_moon_phase,day_of_week,week_order,week,month,day,day_offset,until_dst_value
-1,Easter,vernal equinox,full moon,Sunday,first,,,,,
+1,Easter,vernal equinox,full moon,Sunday,,,,,,
 2,April Fools Day,,,,,,4,1,,
 3,Spring Starts,vernal equinox,,,,,,,,
 4,Summer Starts,summer solstice,,,,,,,,
@@ -7,10 +7,10 @@ id,name,after_solstice_or_equinox,after_moon_phase,day_of_week,week_order,week,m
 6,Winter Starts,winter solstice,,,,,,,,
 7,Daylight Saving Time Starts,,,,,,1,1,,1
 8,Daylight Saving Time Ends,,,,,,6,1,,0
-9,Ash Wednesday,vernal equinox,full moon,Sunday,first,,,,-46,
-10,Palm Sunday,vernal equinox,full moon,Sunday,first,,,,-7,
-11,Maundy Thursday,vernal equinox,full moon,Sunday,first,,,,-3,
-12,Good Friday,vernal equinox,full moon,Sunday,first,,,,-2,
+9,Ash Wednesday,vernal equinox,full moon,Sunday,,,,,-46,
+10,Palm Sunday,vernal equinox,full moon,Sunday,,,,,-7,
+11,Maundy Thursday,vernal equinox,full moon,Sunday,,,,,-3,
+12,Good Friday,vernal equinox,full moon,Sunday,,,,,-2,
 13,Christmas,,,,,,12,25,,
 14,Christmas Eve,,,,,,12,24,,
 15,Earth Day,,,,,,4,22,,
@@ -28,3 +28,4 @@ id,name,after_solstice_or_equinox,after_moon_phase,day_of_week,week_order,week,m
 27,Thanksgiving,,,Thursday,first,4,11,,,
 28,Valentine's Day,,,,,,2,14,,
 29,Washington's Birthday,,,Monday,first,3,2,,,
+30,Black Friday,,,Friday,first,4,11,,,
