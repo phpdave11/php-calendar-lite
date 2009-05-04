@@ -31,3 +31,4 @@ id,name,after_solstice_or_equinox,after_moon_phase,day_of_week,week_order,week,m
 30,Black Friday,,,Friday,first,4,11
 31,Saint Patrick's Day,,,,,,3,17
 32,Columbus Day,,,Monday,first,2,10
+33,Cinco de Mayo,,,,,,5,5
