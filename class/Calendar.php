@@ -189,20 +189,6 @@ class Calendar
                                           '">' . $text . '</a>';
     }
 
-    private function getQuery($array, $excludes)
-    {
-        if (!is_array($excludes))
-            $excludes = array($excludes);
-        foreach ($excludes as $exclude)
-            if (isset($array[$exclude]))
-                unset($array[$exclude]);
-
-        $string = http_build_query($array, '', '&amp;');
-        if (!empty($string))
-            $string .= '&amp;';
-        return $string;
-    }
-
     public function display($month=null)
     {
         if ($this->useTidy)
@@ -231,8 +217,6 @@ class Calendar
 
         echo '<div id="languages">';
 
-        $getNoLanguage = $this->getQuery($_GET, 'language');
-
         echo $this->makeLink(array('language' => 'en'), 'English') . ' &nbsp;';
         echo $this->makeLink(array('language' => 'es'), 'Español') . ' &nbsp;';
         echo $this->makeLink(array('language' => 'de'), 'Deutsch') . ' &nbsp;';
@@ -243,9 +227,6 @@ class Calendar
         echo '</div></div>';
 
         echo '<h1>';
-
-        $getNoYear = $this->getQuery($_GET, 'year');
-        $getNoMonthOrYear = $this->getQuery($_GET, array('month', 'year'));
 
         echo '<span class="smallyear">';
         echo $this->makeLink(array('year' => $this->year - 1, 'month' => $this->month), $this->year - 1) . ' ';
@@ -332,9 +313,6 @@ class Calendar
             $ts = mktime($hour, $minute, $second, $month, --$day, $year);
             $start = date('l', $ts);
         }
-
-        $getNoMonth = $this->getQuery($_GET, 'month');
-        $getNoMonthOrYear = $this->getQuery($_GET, array('month', 'year'));
 
         $link = empty($this->month) ? $this->makeLink(array('month' => $monthNumber), $monthName) : $monthName;
 
