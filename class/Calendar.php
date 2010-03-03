@@ -165,7 +165,13 @@ class Calendar
         }
 
         foreach ($this->holidays as $holiday)
-            $this->dates[$holiday->getDate($this->year, $this->moonPhases)] = $holiday->name;
+        {
+            $date = $holiday->getDate($this->year, $this->moonPhases);
+            if (!isset($this->dates[$date]))
+                $this->dates[$date] = array();
+
+            $this->dates[$date][] = $holiday->name;
+        }
     }
 
     private function makeLink($overrides, $text, $useAjax=true)
@@ -372,7 +378,8 @@ class Calendar
 
                     // Holiday
                     if (isset($this->dates[$date]))
-                        echo '<span class="holiday">' . $this->dates[$date] . '</span>';
+                        foreach($this->dates[$date] as $data)
+                            echo '<span class="holiday">' . $data . '</span><br/>';
                 }
                 else
                     echo '&nbsp;';
