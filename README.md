@@ -1,3 +1,3 @@
-# php-calendar-light
+# php-calendar-lite
 
 ![Screenshot](img/screenshot.png)
