@@ -13,7 +13,16 @@ class Calendar
     private $useTidy = false;
     private $locale = 'en_US.UTF-8';
     private $encoding = 'UTF-8';
-    private $local_encoding = 'UTF-8';
+    private $locale_encoding = 'UTF-8';
+    private $availableLocales = [
+        'en' => 'en_US',
+        'es' => 'es_ES', // Spanish
+        'de' => 'de_DE', // German
+        'ru' => 'ru_RU', // Russian
+        'ja' => 'ja_JP', // Japanese
+        'zh' => 'zh_CN', // Chinese
+        'ko' => 'ko_KR', // Korean
+    ];
 
     public function useAjax($bool)
     {
@@ -27,37 +36,22 @@ class Calendar
 
     private function setLanguage($lang)
     {
-        $locales = array(
-            'en' => array('en_US.UTF-8' => 'UTF-8', 'english' => 'ISO-8859-1'),
-            'es' => array('es_ES.UTF-8' => 'UTF-8', 'spanish' => 'ISO-8859-1'),
-            'de' => array('de_DE.UTF-8' => 'UTF-8', 'german' => 'ISO-8859-1'),
-            'ru' => array('ru_RU.UTF-8' => 'UTF-8', 'russian' => 'WINDOWS-1251'),
-            'ja' => array('ja_JP.UTF-8' => 'UTF-8', 'japanese' => 'Shift_JIS'),
-            'zh' => array('zh_CN.UTF-8' => 'UTF-8', 'chinese' => 'Big5'),
-            'ko' => array('ko_KR.UTF-8' => 'UTF-8', 'korean' => 'EUC-KR')
-        );
-
-        // Vista uses a different default encoding than Windows XP for Chinese
-        if (php_uname('s') == 'Windows NT' && php_uname('r') >= 6)
-            $locales['zh']['chinese'] = 'GB2312';
-
-        foreach ($locales[$lang] as $locale => $encoding)
-        {
-            if (setlocale(LC_ALL, $locale))
-            {
-                $this->locale = $locale;
-                $this->locale_encoding = $encoding;
-                break;
-            }
-        }
+        // Map language code to locale
+        $this->locale = $this->availableLocales[$lang] ?? 'en_US';
     }
 
-    private function strftime($format, $ts)
+    private function formatDate($timestamp, $pattern)
     {
-        $retval = strftime($format, $ts);
-        if ($this->encoding != $this->locale_encoding)
-            $retval = iconv($this->locale_encoding, $this->encoding, $retval);
-        return $retval;
+        $formatter = new IntlDateFormatter(
+            $this->locale,
+            IntlDateFormatter::FULL,
+            IntlDateFormatter::NONE,
+            date_default_timezone_get(),
+            IntlDateFormatter::TRADITIONAL,
+            $pattern
+        );
+
+        return $formatter->format($timestamp);
     }
 
     private function translateNiceUrlToParams()
@@ -258,7 +252,7 @@ class Calendar
         else
             $this->printMonth($month);
 
-        echo '<h1 class="footer"><a href="http://code.google.com/p/php-calendar-light/downloads/list">source code</a></h1>';
+        echo '<h1 class="footer"><a href="https://github.com/phpdave11/php-calendar-lite">source code</a></h1>';
 
         if (! $this->ajax)
         {
@@ -298,17 +292,17 @@ class Calendar
 
         $today = date('Y-m-d');
 
-        $monthName = $this->strftime('%B', $ts);
+        $monthName = $this->formatDate($ts, 'MMMM');
         $monthNumber = idate('n', $ts);
 
         $lastMonthTs = mktime($hour, $minute, $second, $month - 1, $day, $year);
         $nextMonthTs = mktime($hour, $minute, $second, $month + 1, $day, $year);
 
-        $lastMonthName = $this->strftime('%B', $lastMonthTs);
+        $lastMonthName = $this->formatDate($lastMonthTs, 'MMMM');
         $lastMonthNumber = idate('n', $lastMonthTs);
         $lastYear = idate('Y', $lastMonthTs);
 
-        $nextMonthName = $this->strftime('%B', $nextMonthTs);
+        $nextMonthName = $this->formatDate($nextMonthTs, 'MMMM');
         $nextMonthNumber = idate('n', $nextMonthTs);
         $nextYear = idate('Y', $nextMonthTs);
 
@@ -351,7 +345,7 @@ class Calendar
         $weekTs = mktime($hour, $minute, $second, $month, $weekDays, $year);
         for ($i = 0; $i < 7; $i++)
         {
-            echo '<th>' . $this->strftime('%A', $weekTs) . '</th>';
+            echo '<th>' . $this->formatDate($weekTs, 'EEEE') . '</th>';
             $weekTs = mktime($hour, $minute, $second, $month, ++$weekDays, $year);
         }
         echo '</tr></thead><tbody>';
